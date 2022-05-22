@@ -35,6 +35,8 @@
         }
 
         function listarJson(jsonFilmes){
+            let lista = document.getElementById('lista')
+            lista.innerHTML = ''
             for(let i in jsonFilmes['filmes']['filme']){
                 let item = jsonFilmes['filmes']['filme'][i]
                 console.log(jsonFilmes['filmes']['filme'][i])
@@ -79,7 +81,6 @@
                 col.appendChild(p5)
                 col.appendChild(hr)
 
-                let lista = document.getElementById('lista')
                 lista.appendChild(divRow)
 
             }
@@ -99,12 +100,16 @@
 
     </nav>
 
-    <div id="lista" class="container">
+    <div class="container">
         <div class="row">
             <div class="col">
                 <button type="button" class="btn btn-success" onclick="getFilmes()">Listar filmes</button>
             </div>
         </div>
+    </div>
+    
+    <div id="lista" class="container">
+    
     </div>
 
 
