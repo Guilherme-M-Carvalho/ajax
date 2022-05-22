@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmes</title>
+
+    <script src="xmltojson.js"></script>
+    <script>
+        function getFilmes()
+        {
+            let xml = new XMLHttpRequest()
+            xml.open('GET', 'http://localhost/ajax/xml/filmes.xml')            
+            
+            xml.onreadystatechange =()=>{
+                if(xml.readyState == 4 && xml.status == 200){
+                    let xmlFilmes = xml.responseText
+                    console.log(xmlFilmes)
+                    let parser = new DOMParser()
+                    xmlFilmes = parser.parseFromString(xmlFilmes, 'text/xml')
+                    console.log(xmlFilmes)
+                    let jsonFilmes = xmlToJson(xmlFilmes)
+                    console.log(jsonFilmes)
+                    listarJson(jsonFilmes)
+                }
+
+                if(xml.readyState == 4 && xml.status == 404){
+                    //
+                }
+            }
+            
+            xml.send()
+            
+        }
+
+        function listarJson(jsonFilmes){
+            for(let i in jsonFilmes['filmes']['filme']){
+                let item = jsonFilmes['filmes']['filme'][i]
+                console.log(jsonFilmes['filmes']['filme'][i])
+                let divRow = document.createElement('div')
+                divRow.className = 'row'
+
+                let col = document.createElement('col')
+                col.className = 'col'
+
+                let p1 = document.createElement('p')
+                p1.innerHTML = '<strong>Titulo: </strong>'+item.titulo["#text"]
+
+                let p2 = document.createElement('p')
+                p2.innerHTML = '<strong>Resumo: </strong>'+item.resumo["#text"]
+                
+                let genero = ''
+                for(let g in item.genero){
+                    genero += item.genero[g]['#text'] +" "
+                }  
+                let p3 = document.createElement('p')
+                p3.innerHTML = '<strong>Genêro: </strong>'+genero
+                
+                let ator = ''
+
+                for(let a in item.elenco['ator']){
+                    ator += item.elenco['ator'][a]['#text'] +", "
+                }
+
+                let p4 = document.createElement('p')
+                p4.innerHTML = '<strong>Elenco: </strong>'+ator
+                
+                let p5 = document.createElement('p')
+                p5.innerHTML = '<strong>Data de lançamento: </strong>'+item.dataLancamento["#text"]
+            
+                let hr = document.createElement('hr')
+
+                divRow.appendChild(col)
+                col.appendChild(p1)
+                col.appendChild(p2)
+                col.appendChild(p3)
+                col.appendChild(p4)
+                col.appendChild(p5)
+                col.appendChild(hr)
+
+                let lista = document.getElementById('lista')
+                lista.appendChild(divRow)
+
+            }
+        }
+
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light mb-4">
+        <div class="container">
+            <div class="navbar-brand mb-0 h1">
+                <h3>Catalago de filmes</h3>
+            </div>
+        </div>
+
+    </nav>
+
+    <div id="lista" class="container">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-success" onclick="getFilmes()">Listar filmes</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+</body>
+</html>
